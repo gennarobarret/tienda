@@ -1,0 +1,25 @@
+.centered-content {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.svgIcon {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    fill: rgb(0, 119, 255);
+}
+
+h6 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+img {
+    width: 50px
+}
+
+spinner-border {
+    width: 3rem;
+    height: 3rem;
+}

@@ -1,0 +1,173 @@
+<app-sidebar></app-sidebar>
+<!-- Page title-->
+<div class="border-bottom pt-5 mt-2 mb-5">
+    <h1 class="mt-2 mt-md-4 mb-3 pt-5">Proveedores</h1>
+</div>
+
+<form name="proveedorForm" (ngSubmit)="registro()" #proveedorForm="ngForm">
+    <div class="card box-shadow-sm">
+        <div class="card-header">
+            <h5>Registro de proveedor</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="col-md-4 form-group">
+                    <label for="name" class="form-label">Nombres</label>
+                    <input class="form-control" type="text" name="name" placeholder="name" id="name"
+                        [(ngModel)]="proveedor['name']" #name="ngModel" maxlength="25" pattern="^[a-zA-Z0-9\sñÑ]+$"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && name.invalid }" required>
+                    <div *ngIf="proveedorForm.submitted && name.invalid" class="invalid-feedback">
+                        <div *ngIf="name.errors?.['required']">Name is required</div>
+                        <div *ngIf="name.errors?.['pattern']">Only characters
+                            are allowed</div>
+                        <div *ngIf="proveedorForm.submitted && name.invalid" class="invalid-feedback">
+                            <div *ngIf="name.errors?.['required']">name is required</div>
+                            <div *ngIf="name.errors?.['pattern']">Only characters are allowed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="company" class="form-label">Company name</label>
+                    <input class="form-control" type="text" name="company" placeholder="company" id="company"
+                        [(ngModel)]="proveedor['company']" #company="ngModel" maxlength="25"
+                        pattern="^[a-zA-Z0-9\s.,-ñÑ&]+$"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && company.invalid }" required>
+                    <div *ngIf="proveedorForm.submitted && company.invalid" class="invalid-feedback">
+                        <div *ngIf="company.errors?.['required']">Company name is required</div>
+                        <div *ngIf="company.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="tax_identification" class="form-label">Identifacion Fiscal</label>
+                    <input class="form-control" type="text" placeholder="tax_identification" name="tax_identification"
+                        id="tax_identification" maxlength="15" pattern="^[a-zA-Z0-9]+$"
+                        [(ngModel)]="proveedor['tax_identification']" #tax_identification="ngModel"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && tax_identification.invalid }" required>
+                    <div *ngIf="proveedorForm.submitted && tax_identification.invalid" class="invalid-feedback">
+                        <div *ngIf="tax_identification.errors?.['required']">Numero de identificion is required</div>
+                        <div *ngIf="tax_identification.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="country" class="form-label">País</label>
+                    <select class="form-control" name="country" [(ngModel)]="proveedor.country" #country="ngModel"
+                        (ngModelChange)="onCountryChange()"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && country.invalid }" required
+                        title="country">
+                        <option value disabled selected>País</option>
+                        <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+                    </select>
+                    <div *ngIf="proveedorForm.submitted && country.invalid" class="invalid-feedback">
+                        <div *ngIf="country.errors?.['required']">Country is
+                            required</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="state" class="form-label">{{ country_divGeo ?
+                        country_divGeo :
+                        'Estado/Provincia/Distrito' }}</label>
+                    <select class="form-control" name="state" [(ngModel)]="proveedor.state" #state="ngModel"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && state.invalid }" required title="state">
+                        <option value disabled selected>{{ country_divGeo ?
+                            country_divGeo : 'Seleccione' }}</option>
+                        <option *ngFor="let state of states" [value]="state.province_abbrev">{{
+                            state.province_name
+                            }}</option>
+                    </select>
+                    <div *ngIf="proveedorForm.submitted && state.invalid" class="invalid-feedback">
+                        <div *ngIf="state.errors?.['required']">{{ country_divGeo ?
+                            country_divGeo :
+                            'Estado/Provincia/Distrito' }} is required</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="city" class="form-label">City</label>
+                    <input class="form-control" type="text" name="city" placeholder="city" id="city"
+                        [(ngModel)]="proveedor['city']" #city="ngModel"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && city.invalid }" maxlength="25"
+                        pattern="^[a-zA-Z0-9\s.,-/ñÑ]+$" required>
+                    <div *ngIf="proveedorForm.submitted && city.invalid" class="invalid-feedback">
+                        <div *ngIf="city.errors?.['required']">city name is required</div>
+                        <div *ngIf="city.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="street1" class="form-label">Dirección Principal</label>
+                    <input class="form-control" type="text" name="street1" placeholder="street1" id="street1"
+                        [(ngModel)]="proveedor['street1']" #street1="ngModel"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && street1.invalid }" maxlength="25"
+                        pattern="^[a-zA-Z0-9\s.,-/ñÑ]+$" required>
+                    <div *ngIf="proveedorForm.submitted && street1.invalid" class="invalid-feedback">
+                        <div *ngIf="street1.errors?.['required']">Dirección Principalis required</div>
+                        <div *ngIf="street1.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="street2" class="form-label">Dirección (opcional)</label>
+                    <input class="form-control" type="text" name="street2" placeholder="street2" id="street2"
+                        [(ngModel)]="proveedor['street2']" #street2="ngModel"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && street2.invalid }" maxlength="50"
+                        pattern="^[a-zA-Z0-9\s.,-/ñÑ]+$">
+                    <div *ngIf="proveedorForm.submitted && street1.invalid" class="invalid-feedback">
+                        <!-- <div *ngIf="street2.errors?.['required']">Dirección (opcional) is required</div> -->
+                        <div *ngIf="street2.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="zip" class="form-label">Codigo postal</label>
+                    <input class="form-control" type="text" name="zip" placeholder="zip" id="zip"
+                        [(ngModel)]="proveedor['zip']" #zip="ngModel"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && zip.invalid }" maxlength="6"
+                        pattern="^[0-9]+$" required>
+
+                    <div *ngIf="proveedorForm.submitted && zip.invalid" class="invalid-feedback">
+                        <div *ngIf="zip.errors?.['required']">zipcode is required</div>
+                        <div *ngIf="zip.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="Phone" class="form-label">Phone</label>
+                    <input class="form-control" type="tel" placeholder="phone" name="phone" id="phone"
+                        [(ngModel)]="proveedor['phone']" #phone="ngModel"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && phone.invalid }" maxlength="25"
+                        pattern="^[0-9+]+$" required>
+                    <div *ngIf="proveedorForm.submitted && phone.invalid" class="invalid-feedback">
+                        <div *ngIf="phone.errors?.['required']">phone number is required</div>
+                        <div *ngIf="phone.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input class="form-control" type="text" name="email" placeholder="email"
+                        [(ngModel)]="proveedor['email']" #email="ngModel"
+                        [ngClass]="{ 'is-invalid': proveedorForm.submitted && email.invalid }" required
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                        title="Email must be a valid email address">
+                    <div *ngIf="proveedorForm.submitted && email.invalid" class="invalid-feedback">
+                        <div *ngIf="email.errors?.['required']">Email is required</div>
+                        <div *ngIf="email.errors?.['pattern']">Email must be a valid email address</div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <button class="btn btn-primary mr-3" type="submit">Registrar proveedor</button>
+        <button class="btn btn-secondary mr-3" type="reset">Reset</button>
+        <a [routerLink]="['/panel/proveedores']" class="btn btn-warning">Regresar</a>
+    </div>
+</form>

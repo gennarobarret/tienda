@@ -1,0 +1,7 @@
+.invalid-input {
+    outline-color: red !important;
+}
+
+.invalid-input .input-group-text {
+    color: red;
+}

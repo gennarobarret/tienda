@@ -1,0 +1,145 @@
+<app-sidebar></app-sidebar>
+<div class="border-bottom pt-5 mt-2 mb-5">
+    <h1 class="mt-2 mt-md-4 mb-3 pt-5">Categorias</h1>
+    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+        <p class="text-muted">Este módulo registra categorias de la tienda, ademas de
+            agregar oferta por categoria con una fecha tope para ser aplicada.</p>
+    </div>
+</div>
+
+<form name="categoriaForm" (ngSubmit)="registro()" #categoriaForm="ngForm" novalidate>
+    <div class="card box-shadow-sm">
+        <div class="card-header">
+            <h5>Registro de categoria</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+
+                <div class="col-md-12 form-group">
+                    <label for="titulo" class="form-label">Titulo Categoria</label>
+                    <input class="form-control" type="text" name="titulo" placeholder="titulo" id="titulo"
+                        [(ngModel)]="categoria['titulo']" #titulo="ngModel" maxlength="25" pattern="^[a-zA-Z0-9\sñÑ]+$"
+                        [ngClass]="{ 'is-invalid': categoriaForm.submitted && titulo.invalid }" required>
+                    <div *ngIf="categoriaForm.submitted && titulo.invalid" class="invalid-feedback">
+                        <div *ngIf="titulo.errors?.['required']">titulo is required</div>
+                        <div *ngIf="titulo.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 form-group">
+                    <label for="icono" class="form-label">Icono Categoria</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="icono" [(ngModel)]="categoria['icono']"
+                            (ngModelChange)="validateSvgCode()" placeholder="Pega el código SVG aquí"
+                            [ngClass]="{ 'is-invalid': categoriaForm.submitted && titulo.invalid }" required>
+                        <div class="input-group-text">
+                            <div *ngIf="showViewer" [innerHTML]="sanitizedSvgCode"></div>
+                        </div>
+                        <div *ngIf="showInvalidSvg && categoria['icono']" class="invalid-feedback">El código SVG
+                            ingresado no es válido.
+                        </div>
+                        <div *ngIf="categoriaForm.submitted && titulo.invalid" class="invalid-feedback">
+                            <div *ngIf="titulo.errors?.['required']">icono is required</div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class=" col-md-6 form-group">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select class="form-control custom-select" name="estado" title="estado"
+                        [(ngModel)]="categoria['estado']" #estado="ngModel"
+                        [ngClass]="{ 'is-invalid': categoriaForm.submitted && estado.invalid }" required>
+                        <option value="" disabled selected>Disponibilidad</option>
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                    <div *ngIf="categoriaForm.submitted && estado.invalid" class="invalid-feedback">
+                        <div *ngIf="estado.errors?.['required']">estado is required</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label for="oferta" class="form-label">Oferta</label>
+                        <select class="form-select custom-select" name="oferta" title="oferta"
+                            [(ngModel)]="categoria['oferta']" #oferta="ngModel"
+                            [ngClass]="{ 'is-invalid': categoriaForm.submitted && oferta.invalid }" required>
+                            <option value="" disabled selected>oferta</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                        <div *ngIf="categoriaForm.submitted && oferta.invalid" class="invalid-feedback">
+                            <div *ngIf="oferta.errors?.['required']">oferta is required</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descuento_oferta" class="form-label">Descuento Oferta</label>
+                        <input class="form-control" type="number" name="descuento_oferta" placeholder="descuento %"
+                            id="titulo" [(ngModel)]="categoria['descuento_oferta']" #descuento_oferta="ngModel" min="0"
+                            max="100" [ngClass]="{ 'is-invalid': categoriaForm.submitted && descuento_oferta.invalid }"
+                            required>
+                        <div *ngIf="categoriaForm.submitted && descuento_oferta.invalid" class="invalid-feedback">
+                            <div *ngIf="descuento_oferta.errors?.['required']">descuento oferta is required</div>
+                            <div *ngIf="descuento_oferta.errors?.['pattern']">Only characters are allowed</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descuento_oferta" class="form-label">Descuento Oferta</label>
+                        <div class="input-group mb-3">
+
+                            <input type="text" class="form-control" aria-label="Cantidad (al dólar más cercano)">
+                            <span class="input-group-text">% Discount</span>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="fin_oferta" class="form-label">Fecha Fin Oferta</label>
+                        <input class="form-control" type="date" placeholder="fin_oferta" id="fin_oferta"
+                            name="fin_oferta" [(ngModel)]="categoria['fin_oferta']" #fin_oferta="ngModel"
+                            [ngClass]="{ 'is-invalid': categoriaForm.submitted && fin_oferta.invalid }" required />
+                        <div *ngIf="categoriaForm.submitted && fin_oferta.invalid" class="invalid-feedback">
+                            <div *ngIf="fin_oferta.errors?.['required']">Fecha nacimiento is required</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <div class="col-lg-12 form-group">
+                        <label for="">Portada De La Oferta</label>
+                        <div class="custom-file">
+                            <input class="custom-file-input" type="file" id="file-input"
+                                (change)="fileChangeEvent($event)">
+                            <label class="custom-file-label" id="input-img_oferta" for="file-input"
+                                style="white-space:nowrap;overflow:hidden">Seleccionar imagen</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <img [src]="imgSelect" class="img-thumbnail" alt="Rounded image">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button *ngIf="!load_btn" class="btn btn-primary mr-3" type="submit">Crear categoria</button>
+        <button *ngIf="load_btn" type="button" class="btn btn-secondary" disabled>
+            <span class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+            Creando...
+        </button>
+        <button class="btn btn-secondary mr-3" type="reset">Reset</button>
+        <a class="btn btn-warning" [routerLink]="['/panel/categorias']"
+            routerLinkActive="router-link-active">Regresar</a>
+    </div>
+
+</form>

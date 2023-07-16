@@ -1,0 +1,7 @@
+.invalid-input {
+    outline-color: red;
+}
+
+.invalid-input .x {
+    color: red;
+}
