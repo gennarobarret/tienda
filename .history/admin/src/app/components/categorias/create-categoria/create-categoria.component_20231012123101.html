@@ -1,0 +1,139 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid py-6">
+    <h1>Categorias</h1>
+    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+        <p class="text-muted">Este módulo registra categorias de la tienda, ademas de
+            agregar oferta por categoria con una fecha tope para ser aplicada.</p>
+    </div>
+</div>
+
+<!-- create-categoria.component.html -->
+<form [formGroup]="categoriaForm" (ngSubmit)="registro()">
+    <div class="card box-shadow-sm">
+        <div class="card-header">
+            <h5>Registro de categoría</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-row mb-3">
+                <div class="col-md-6 themed-grid-col">
+                    <div class="row">
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Title Categoria -->
+                            <div class="form-group">
+                                <label for="nombre_categoria" class="form-label">Nombre Categoría</label>
+                                <input type="text" id="nombre_categoria" name="nombre_categoria"
+                                    formControlName="nombre_categoria" placeholder="Nombre de la categoría"
+                                    class="form-control form-control-md"
+                                    [class.is-invalid]="nombre_categoria.invalid && (nombre_categoria.dirty || nombre_categoria.touched)" />
+                                <div *ngIf="nombre_categoria.invalid && (nombre_categoria.dirty || nombre_categoria.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="nombre_categoria.errors?.['required']">Este campo es obligatorio.</div>
+                                    <div *ngIf="nombre_categoria.errors?.['minlength']">Este campo debe tener al menos 1
+                                        carácter.
+                                    </div>
+                                    <div *ngIf="nombre_categoria.errors?.['maxlength']">Este campo debe tener como
+                                        máximo 25
+                                        caracteres.</div>
+                                    <div *ngIf="nombre_categoria.errors?.['pattern']">Solo se permiten letras, números,
+                                        espacios,
+                                        "ñ" y "Ñ".</div>
+                                    <div *ngIf="nombre_categoria.errors?.['repeatedTitleError']">
+                                        Este nombre_categoria de categoria ya existe</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Estado Categoria -->
+                            <div class="form-group">
+                                <label for="estado_categoria" class="form-label">Estado Categoría</label>
+                                <div class="form-control-md form-check form-switch form-switch-lg ml-4 mb-5">
+                                    <input class="form-check-input" type="checkbox" id="estado_categoria"
+                                        formControlName="estado_categoria" title="Toggle Category State" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col">
+                            <div class="form-group">
+                                <label for="ofertaSelect">Selecciona una categoría:</label>
+                                <select id="ofertaSelect" name="ofertas" (change)="onOfertaSeleccionada($event)"
+                                    estado_categoria class="form-select form-control" aria-label="ofertas disponibles">
+                                    <option selected>Ofertas</option>
+                                    <option *ngFor="let oferta of ofertas_categoria" [value]="oferta.id">{{
+                                        oferta.nombre_oferta }}</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="icono_categoria" class="form-label">Icono Categoría:</label>
+                            <div class="col-md-6 themed-grid-col"><select class="form-select" multiple
+                                    aria-label="multiple select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 themed-grid-col">
+                    <!-- Icono Categoria -->
+                    <div class="form-group">
+                        <label for="icono_categoria" class="form-label">Icono Categoría:</label>
+                        <div class="mb-3">
+                            <input type="text" id="icono_categoria" name="icono_categoria"
+                                formControlName="icono_categoria" placeholder="Icono de la categoría"
+                                class="form-control form-control-md"
+                                [class.is-invalid]="icono_categoria.invalid && (icono_categoria.dirty || icono_categoria.touched)" />
+                            <div *ngIf="icono_categoria.invalid && (icono_categoria.dirty || icono_categoria.touched)"
+                                class="invalid-feedback">
+                                <div *ngIf="icono_categoria.errors?.['required']">Este campo es obligatorio.
+                                </div>
+                                <div *ngIf="icono_categoria.value && icono_categoria.errors?.['invalidSVG']">
+                                    Formato de icono_categoria
+                                    SVG no
+                                    válido. Proporcione un icono_categoria SVG válido.</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Visualizador Icono Categoria -->
+                    <div class="rounded-box m-auto"
+                        [ngClass]="{'invalid-feedback border border-danger': icono_categoria.invalid && (icono_categoria.dirty || icono_categoria.touched)}">
+                        <div class="svg-preview" [innerHTML]="sanitizedSvgContent"></div>
+                        <div *ngIf="icono_categoria.invalid && (icono_categoria.dirty || icono_categoria.touched)"
+                            class="error-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none"
+                                stroke="#ff4242" viewBox="0 0 12 12">
+                                <circle cx="6" cy="6" r="4.5" />
+                                <path stroke-linejoin="round" d="M5.8 3.6h.4L6 6.5z" />
+                                <circle cx="6" cy="8.2" r=".6" fill="#ff4242" stroke="none" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row row-cols-1 row-cols-sm-3 g-3">
+            <div class="col themed-grid-col">
+                <button *ngIf="load_btn" type="button" class="btn btn-secondary" disabled>
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    Creando...
+                </button>
+                <button *ngIf="!load_btn" type="button" class="btn btn-sm btn-primary" (click)="registro()">Crear
+                    categoría</button>
+            </div>
+            <div class="col themed-grid-col">
+                <button class="btn btn-secondary" type="button" (click)="resetForm()">Reset</button>
+            </div>
+            <div class="col themed-grid-col">
+                <button type="button" class="btn btn-warning" [routerLink]="['/panel/categorias']"
+                    routerLinkActive="router-link-active">Regresar</button>
+            </div>
+        </div>
+    </div>
+</form>

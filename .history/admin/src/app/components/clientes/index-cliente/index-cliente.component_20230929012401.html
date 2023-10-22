@@ -1,0 +1,186 @@
+<app-sidebar></app-sidebar>
+<!-- Page title -->
+<div class="border-bottom pt-5 mt-2 mb-5">
+    <h1 class="mt-2 mt-md-4 mb-3 pt-5">Clientes</h1>
+    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+        <p class="text-muted">Este módulo lista todos los clientes de la tienda.</p>
+        <p class="font-size-sm font-weight-medium pl-md-4">
+            <a class="text-nowrap" [routerLink]="['/panel/clientes/registro']">Registrar
+                nuevo<i class="cxi-angle-right font-size-base align-middle ml-1"></i></a>
+        </p>
+    </div>
+</div>
+
+<div class="card box-shadow-sm">
+    <div class="card-header">
+        <h5>Filtro de clientes</h5>
+    </div>
+    <div class="card-header">
+        <form class="form-inline pt-2">
+            <label class="sr-only" for="inline-form-input-name">Apellidos</label>
+            <input class="form-control mb-3 mr-sm-4" (keyup)="filtro('apellidos')" type="text" name="filtro_apellidos"
+                [(ngModel)]="filtro_apellidos" id="inline-form-input-name" placeholder="Apellidos" />
+            <label class="sr-only" for="inline-form-input-username">Correo</label>
+            <div class="input-group mb-3 mr-sm-4">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">@</div>
+                </div>
+                <input class="form-control" (keyup)="filtro('correo')" type="text" name="filtro_correo"
+                    [(ngModel)]="filtro_correo" placeholder="Correo" />
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Correo</th>
+                        <th>Telefono</th>
+                        <th>DNI</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="load_data">
+                    <tr>
+                        <td class="text-center" colspan="5">
+                            <div class="spinner-border" style="width: 3rem;
+                                height: 3rem" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <ng-container *ngIf="!load_data"> </ng-container>
+
+                <tbody *ngIf="!load_data && clientes.length === 0">
+                    <tr>
+                        <td class="text-center" colspan="7">
+                            <p class="text-muted">No se encontro ningun cliente en la base de datos.</p>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tbody *ngFor="
+                    let item of clientes
+                    | slice: (page - 1) * pageSize:(page - 1) * pageSize +
+                    pageSize;
+                    let indice= index
+                    ">
+                    <tr>
+                        <td>{{ indice + 1 }}</td>
+                        <td>{{ item.nombres }}</td>
+                        <td>{{ item.apellidos }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.telefono }}</td>
+                        <td>{{ item.dni }}</td>
+                        <td>
+                            <div class="btn-group d-flex">
+                                <a class="btn-warning d-flex align-items-center btn-icon-custom p-1 mr-2"
+                                    [routerLink]="['/panel/clientes',item._id]">
+                                    <img src="../assets/svgs/btn-icon-edit.svg" alt="edit icon" title="edit"
+                                        class="me-2" />
+                                </a>
+                                <a class="btn-danger d-flex align-items-center btn-icon-custom p-1"
+                                    style="cursor: pointer;" data-bs-toggle="modal"
+                                    [attr.data-bs-target]="'#delete-' + item._id">
+                                    <img src="../assets/svgs/btn-icon-trash.svg" alt="delete icon" title="delete"
+                                        class="me-2" />
+                                </a>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="delete-{{item._id}}" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmación de
+                                                eliminación</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Deseas eliminar, {{item.company }} de la lista de proveedores?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cancelar</button>
+                                            <button *ngIf="!load_btn" class="btn btn-danger btn-shadow btn-sm"
+                                                (click)="eliminar(item._id)" type="button">Si,
+                                                eliminar</button>
+                                            <button *ngIf="load_btn" type="button" class="btn btn-primary" disabled>
+                                                <span class="spinner-grow spinner-grow-sm mr-2" role="status"
+                                                    aria-hidden="true"></span>
+                                                Eliminando...
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <!-- Dropdown -->
+                            <!-- <div class="btn-group dropdown d-inline-block mb-3
+                                me-2">
+                                <button class="btn btn-outline-secondary btn-sm
+                                    dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Seleccione
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" [routerLink]="['/panel/clientes',
+                                        item._id]">Editar</a>
+                                    <a class="dropdown-item" style="cursor:
+                                        pointer" data-toggle="modal" [attr.data-target]="'#delete-' +
+                                        item._id">Eliminar</a>
+                                </div>
+                            </div> -->
+
+                            <!-- Modal -->
+                            <!-- <div class="modal fade" id="delete-{{ item._id }}" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">
+                                                Eliminar, {{ item.nombres }} {{
+                                                item.apellidos }}
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>¿Desea eliminar este cliente?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn
+                                                btn-secondary" data-dismiss="modal">
+                                                Cancelar
+                                            </button>
+                                            <button type="button" class="btn
+                                                btn-primary" (click)="eliminar(item._id)">
+                                                Si, eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- Fin de modal -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer"></div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="clientes.length"
+        ARIA="Default pagination"></ngb-pagination>
+</div>

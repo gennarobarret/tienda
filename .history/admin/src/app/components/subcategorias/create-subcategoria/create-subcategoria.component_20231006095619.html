@@ -1,0 +1,107 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid py-6">
+    <h1>Subcategorias</h1>
+    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+        <p class="text-muted">Este módulo registra categorias de la tienda, ademas de
+            agregar oferta por categoria con una fecha tope para ser aplicada.</p>
+    </div>
+</div>
+
+<!-- create-categoria.component.html -->
+<form [formGroup]="subcategoriaForm" (ngSubmit)="registro()">
+    <div class="card box-shadow-sm">
+        <div class="card-header">
+            <h5>Registro de subcategoría</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-row mb-3">
+                <div class="col-md-6 themed-grid-col">
+                    <div class="row">
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Title Subcategoria -->
+                            <div class="form-group">
+                                <label for="nombre_subcategoria" class="form-label">Titulo Subcategoría:</label>
+                                <input type="text" id="nombre_subcategoria" name="nombre_subcategoria"
+                                    formControlName="nombre_subcategoria" placeholder="Nombre de la subcategoría"
+                                    class="form-control form-control-md"
+                                    [class.is-invalid]="nombre_subcategoria.invalid && (nombre_subcategoria.dirty || nombre_subcategoria.touched)" />
+                                <div *ngIf="nombre_subcategoria.invalid && (nombre_subcategoria.dirty || nombre_subcategoria.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="nombre_subcategoria.errors?.['required']">Este campo es obligatorio.
+                                    </div>
+                                    <div *ngIf="nombre_subcategoria.errors?.['minlength']">Este campo debe tener al
+                                        menos 1 carácter.
+                                    </div>
+                                    <div *ngIf="nombre_subcategoria.errors?.['maxlength']">Este campo debe tener como
+                                        máximo 25
+                                        caracteres.</div>
+                                    <div *ngIf="nombre_subcategoria.errors?.['pattern']">Solo se permiten letras,
+                                        números, espacios,
+                                        "ñ" y "Ñ".</div>
+                                    <div *ngIf="nombre_subcategoria.errors?.['repeatedTitleError']">
+                                        Este nombre_subcategoria de categoria ya existe</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Estado Subcategoria -->
+                            <div class="form-group">
+                                <label for="estado_subcategoria" class="form-label">Estado Subcategoría:</label>
+                                <div class="form-control-md form-check form-switch form-switch-lg ml-4 mb-5">
+                                    <input class="form-check-input" type="checkbox" id="estado_subcategoria"
+                                        formControlName="estado_subcategoria" title="Toggle Category State" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 themed-grid-col">
+                            <div class="form-group">
+                                <label for="categoriaSelect">Selecciona una Categoria:</label>
+                                <select id="categoriaSelect" name="categorias"
+                                    (change)="onCategoriaSeleccionada($event)" class="form-select form-control"
+                                    aria-label="categorias disponibles">
+                                    <option selected>Categorias</option>
+                                    <option *ngFor="let categoria of categorias" [value]="categoria.id">{{
+                                        categoria.nombre_categoria }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 themed-grid-col">
+                            <div class="form-group">
+                                <label for="ofertaSelect">Selecciona una Oferta:</label>
+                                <select id="ofertaSelect" name="ofertas" (change)="onOfertaSeleccionada($event)"
+                                    class="form-select form-control" aria-label="ofertas disponibles">
+                                    <option selected>Ofertas</option>
+                                    <option *ngFor="let oferta of ofertas" [value]="oferta.id">{{
+                                        oferta.nombre_oferta }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row row-cols-1 row-cols-sm-3 g-3">
+            <div class="col themed-grid-col">
+                <button *ngIf="load_btn" type="button" class="btn btn-secondary" disabled>
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    Creando...
+                </button>
+                <button *ngIf="!load_btn" type="button" class="btn btn-sm btn-primary" (click)="registro()">Crear
+                    subcategoría</button>
+            </div>
+            <div class="col themed-grid-col">
+                <button class="btn btn-secondary" type="button" (click)="resetForm()">Reset</button>
+            </div>
+            <div class="col themed-grid-col">
+                <button type="button" class="btn btn-warning" [routerLink]="['/panel/subcategorias']"
+                    routerLinkActive="router-link-active">Regresar</button>
+            </div>
+        </div>
+    </div>
+</form>

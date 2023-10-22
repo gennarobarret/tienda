@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+
+.form-check-input {
+    clear: left;
+}
+
+.form-switch.form-switch-lg {
+    margin-bottom: 1.5rem;
+    /* JUST FOR STYLING PURPOSE */
+}
+
+.form-switch.form-switch-lg .form-check-input {
+    height: 2rem;
+    width: calc(3rem + 0.75rem);
+    border-radius: 4rem;
+
+}
+
+.error-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

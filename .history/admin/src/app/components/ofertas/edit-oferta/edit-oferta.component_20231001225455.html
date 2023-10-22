@@ -1,0 +1,120 @@
+<app-sidebar></app-sidebar>
+<!-- Page title-->
+<div class="border-bottom pt-5 mt-2 mb-5">
+    <h1 class="mt-2 mt-md-4 mb-3 pt-5">Clientes</h1>
+    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+        <p class="text-muted">Este módulo lista todos los clientes de la tienda.</p>
+    </div>
+</div>
+
+
+<form #updateForm="ngForm" (ngSubmit)="actualizar(updateForm)">
+    <div class="card box-shadow-sm">
+        <div class="card-header">
+            <h5>Actualizar cliente</h5>
+        </div>
+        <div class="card-body" *ngIf="cliente != undefined">
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label for="nombres" class="form-label">Nombres</label>
+                    <input class="form-control" type="text" name="nombres" placeholder="nombres" id="nombres"
+                        [(ngModel)]="cliente['nombres']" #nombres="ngModel" maxlength="25" pattern="^[a-zA-Z0-9\sñÑ]+$"
+                        [ngClass]="{ 'is-invalid': updateForm.submitted && nombres.invalid }" required>
+                    <div *ngIf="updateForm.submitted && nombres.invalid" class="invalid-feedback">
+                        <div *ngIf="updateForm.submitted && nombres.invalid" class="invalid-feedback">
+                            <div *ngIf="nombres.errors?.['required']">name is required</div>
+                            <div *ngIf="nombres.errors?.['pattern']">Only characters are allowed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <input class="form-control" type="text" name="apellidos" placeholder="apellidos" id="apellidos"
+                        [(ngModel)]="cliente['apellidos']" #apellidos="ngModel" maxlength="25"
+                        pattern="^[a-zA-Z0-9\sñÑ]+$"
+                        [ngClass]="{ 'is-invalid': updateForm.submitted && apellidos.invalid }" required>
+                    <div *ngIf="updateForm.submitted && apellidos.invalid" class="invalid-feedback">
+                        <div *ngIf="apellidos.errors?.['required']">Nombres is required</div>
+                        <div *ngIf="apellidos.errors?.['pattern']">Only characters
+                            are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input class="form-control" type="text" name="email" placeholder="email"
+                        [(ngModel)]="cliente['email']" #email="ngModel"
+                        [ngClass]="{ 'is-invalid': updateForm.submitted && email.invalid }" required
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                        title="Email must be a valid email address">
+                    <div *ngIf="updateForm.submitted && email.invalid" class="invalid-feedback">
+                        <div *ngIf="email.errors?.['required']">Email is required</div>
+                        <div *ngIf="email.errors?.['pattern']">Email must be a valid email address</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="f_nacimiento" class="form-label">Fecha nacimiento</label>
+                    <input class="form-control" type="date" placeholder="f_nacimiento" id="f_nacimiento"
+                        name="f_nacimiento" [(ngModel)]="cliente['f_nacimiento']" #f_nacimiento="ngModel"
+                        [ngClass]="{ 'is-invalid': updateForm.submitted && f_nacimiento.invalid }" required />
+                    <div *ngIf="updateForm.submitted && f_nacimiento.invalid" class="invalid-feedback">
+                        <div *ngIf="f_nacimiento.errors?.['required']">Fecha nacimiento is required</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="telefono" class="form-label">Telefono</label>
+                    <input class="form-control" type="tel" placeholder="Telefono" name="phone" id="phone"
+                        [(ngModel)]="cliente['telefono']" #telefono="ngModel"
+                        [ngClass]="{ 'is-invalid': updateForm.submitted && telefono.invalid }" maxlength="25"
+                        pattern="^[0-9+]+$" required>
+                    <div *ngIf="updateForm.submitted && telefono.invalid" class="invalid-feedback">
+                        <div *ngIf="telefono.errors?.['required']">phone number is required</div>
+                        <div *ngIf="telefono.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="dni" class="form-label">Identifacion</label>
+                    <input class="form-control" type="text" placeholder="dni" name="dni" id="dni" maxlength="15"
+                        pattern="^[a-zA-Z0-9]+$" [(ngModel)]="cliente['dni']" #dni="ngModel"
+                        [ngClass]="{ 'is-invalid': updateForm.submitted && dni.invalid }" required>
+                    <div *ngIf="updateForm.submitted && dni.invalid" class="invalid-feedback">
+                        <div *ngIf="dni.errors?.['required']">Numero de identificion is required</div>
+                        <div *ngIf="dni.errors?.['pattern']">Only characters are allowed</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="genero" class="form-label">Genero</label>
+                    <select class="form-control custom-select" name="genero" title="genero"
+                        [(ngModel)]="cliente['genero']" #genero="ngModel"
+                        [ngClass]="{ 'is-invalid': updateForm.submitted && genero.invalid }" required>
+                        <option value="" disabled selected>Seleccionar</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <div *ngIf="updateForm.submitted && genero.invalid" class="invalid-feedback">
+                        <div *ngIf="genero.errors?.['required']">genero is required</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" *ngIf="cliente == undefined">
+            <h3 class="text-center">No se encontro registro</h3>
+            <div class="row">
+                <div class="col-3 mx-auto">
+                    <img src="assets/img/warning.png" alt="" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary mr-3" type="submit">Actualizar cliente</button>
+            <button class="btn btn-secondary mr-3" type="reset">Reset</button>
+            <a [routerLink]="['/panel/clientes']" class="btn btn-warning">Regresar</a>
+        </div>
+    </div>
+</form>

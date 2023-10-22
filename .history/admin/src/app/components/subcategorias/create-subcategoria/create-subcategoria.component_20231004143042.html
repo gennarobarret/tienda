@@ -1,0 +1,13 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid py-6">
+    <h1>Subcategorias</h1>
+    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+        <p class="text-muted">Este módulo registra subcategorias de la tienda, ademas de
+            agregar oferta por subcategoria con una fecha tope para ser aplicada.</p>
+    </div>
+</div>
+
+<label for="categoria">Selecciona una categoría:</label>
+<select (change)="onCategoriaSeleccionada($event)">
+    <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.nombre_categoria }}</option>
+</select>

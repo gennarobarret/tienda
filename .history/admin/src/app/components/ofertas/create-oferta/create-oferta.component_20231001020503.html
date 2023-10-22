@@ -1,0 +1,193 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid py-4">
+    <h1>Ofertas</h1>
+</div>
+<!-- create-oferta.component.html -->
+<form [formGroup]="ofertaForm" (ngSubmit)="registro()">
+    <div class="card box-shadow-sm">
+        <div class="card-header">
+            <h5>Registro de oferta</h5>
+            <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+                <p class="text-muted">Este módulo registra ofertas de la tienda, ademas de
+                    agregar oferta por oferta con una fecha tope para ser aplicada.</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-row mb-3">
+                <div class="col-md-6 themed-grid-col">
+                    <div class="row">
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Title Oferta -->
+                            <div class="form-group">
+                                <label for="nombre" class="form-label">Nombre Oferta</label>
+                                <input type="text" id="nombre" name="nombre" formControlName="nombre"
+                                    placeholder="Nombre de la oferta" class="form-control form-control-md"
+                                    [class.is-invalid]="nombre.invalid && (nombre.dirty || nombre.touched)" />
+                                <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="nombre.errors?.['required']">Este campo es obligatorio.</div>
+                                    <div *ngIf="nombre.errors?.['minlength']">Este campo debe tener al menos 1 carácter.
+                                    </div>
+                                    <div *ngIf="nombre.errors?.['maxlength']">Este campo debe tener como máximo 25
+                                        caracteres.</div>
+                                    <div *ngIf="nombre.errors?.['pattern']">Solo se permiten letras, números, espacios,
+                                        "ñ" y "Ñ".</div>
+                                    <div *ngIf="nombre.errors?.['repeatedTitleError']">
+                                        Este nombre de oferta ya existe</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Estado Oferta -->
+                            <div class="form-group">
+                                <label for="estado" class="form-label">Estado Oferta</label>
+                                <div class="form-control-md form-check form-switch form-switch-lg ml-4 mb-5">
+                                    <input class="form-check-input" type="checkbox" id="estado" formControlName="estado"
+                                        title="Toggle Category State" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pb-3">
+                        <!-- Descripcion Oferta -->
+                        <div class="form-group">
+                            <label for="descripcion" class="form-label">Descripcion Oferta</label>
+                            <textarea class="form-control" placeholder="Descripcion de la oferta" required rows="4"
+                                name="descripcion" formControlName="descripcion" class="form-control form-control-md"
+                                [class.is-invalid]="descripcion.invalid && (descripcion.dirty || nombre.touched)"></textarea>
+                            <div *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)"
+                                class="invalid-feedback">
+                                <div *ngIf="descripcion.errors?.['required']">Este campo es obligatorio.</div>
+                                <div *ngIf="descripcion.errors?.['minlength']">Este campo debe tener al menos 1
+                                    carácter.
+                                </div>
+                                <div *ngIf="descripcion.errors?.['maxlength']">Este campo debe tener como máximo 25
+                                    caracteres.</div>
+                                <div *ngIf="descripcion.errors?.['pattern']">Solo se permiten letras, números, espacios,
+                                    "ñ" y "Ñ".</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Descuento Oferta Oferta -->
+                            <div class="form-group">
+                                <label for="descuento_oferta" class="form-label">Descuento por Oferta</label>
+                                <div class="form-group">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <input type="number" id="descuento_oferta" name="descuento_oferta"
+                                            formControlName="descuento_oferta" placeholder="Descuento de la oferta"
+                                            class="form-control form-control-md"
+                                            [class.is-invalid]="descuento_oferta.invalid && (descuento_oferta.dirty || descuento_oferta.touched)"
+                                            (keypress)="restrictInput($event)" (input)="limitInputLength($event)" />
+                                        <div *ngIf="descuento_oferta.invalid && (descuento_oferta.dirty || descuento_oferta.touched)"
+                                            class="invalid-feedback">
+                                            <div *ngIf="descuento_oferta.errors?.['required']">El descuento de la oferta
+                                                es obligatorio.</div>
+                                            <div *ngIf="descuento_oferta.errors?.['invalidDiscount']">
+                                                El descuento de la oferta no puede ser cero.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Oferta Oferta -->
+                            <div class="form-group">
+                                <label for="file-input">Portada Oferta</label>
+                                <input type="file" id="file-input" formControlName="portada"
+                                    class="form-control form-control-md" (change)="fileChangeEvent($event)"
+                                    [class.is-invalid]="portada.invalid && (portada.dirty || portada.touched)" />
+                                <div *ngIf="portada.invalid && (portada.dirty || portada.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="portada.errors?.['required']">La portada de la oferta es obligatoria.
+                                    </div>
+                                    <div *ngIf="portada.value && portada.errors?.['invalidFileType']">El archivo debe
+                                        ser una imagen (png, jpeg, jpg, gif, webp).</div>
+                                    <div *ngIf="portada.value && portada.errors?.['invalidFileSize']">La imagen no puede
+                                        superar los 4MB.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 themed-grid-col">
+                            <div class="form-group">
+                                <label for="inicio_oferta" class="form-label">Fecha Inicio Oferta</label>
+                                <input type="date" id="inicio_oferta" name="inicio_oferta"
+                                    formControlName="inicio_oferta"
+                                    placeholder="inicio_oferta de la oferta de la oferta"
+                                    class="form-control form-control-md"
+                                    [class.is-invalid]="inicio_oferta.invalid && (inicio_oferta.dirty || inicio_oferta.touched)" />
+                                <div *ngIf="inicio_oferta.invalid && (inicio_oferta.dirty || inicio_oferta.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="inicio_oferta.errors?.['required']">La fecha de la oferta es
+                                        obligatorio.</div>
+                                    <div *ngIf="inicio_oferta.value && fin_oferta.errors?.['invalidDate']">La fecha de
+                                        finalización de la oferta es inválida.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col">
+                            <div class="form-group">
+                                <label for="fin_oferta" class="form-label">Fecha Fin Oferta</label>
+                                <input type="date" id="fin_oferta" name="fin_oferta" formControlName="fin_oferta"
+                                    placeholder="Vencimiento de la oferta de la oferta"
+                                    class="form-control form-control-md"
+                                    [class.is-invalid]="fin_oferta.invalid && (fin_oferta.dirty || fin_oferta.touched)" />
+                                <div *ngIf="fin_oferta.invalid && (fin_oferta.dirty || fin_oferta.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="fin_oferta.errors?.['required']">El descuento de la oferta es
+                                        obligatorio.</div>
+                                    <div *ngIf="fin_oferta.value && fin_oferta.errors?.['invalidDate']">La fecha de
+                                        finalización de la oferta es inválida.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 themed-grid-col">
+
+                    <!-- Visualizador portada oferta Oferta -->
+                    <img [src]="imageUrl" class="img-thumbnail" alt="imgPortada"
+                        [ngClass]="{'invalid-feedback border border-danger': portada.invalid && (portada.dirty || portada.touched)}" />
+                    <!-- Ajustamos el estilo de la imagen -->
+                    <div *ngIf="portada.invalid && (portada.dirty || portada.touched)" class="error-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none" stroke="#ff4242"
+                            viewBox="0 0 12 12">
+                            <circle cx="6" cy="6" r="4.5" />
+                            <path stroke-linejoin="round" d="M5.8 3.6h.4L6 6.5z" />
+                            <circle cx="6" cy="8.2" r=".6" fill="#ff4242" stroke="none" />
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col themed-grid-col">
+                <button *ngIf="load_btn" type="button" class="btn btn-secondary" disabled>
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    Creando...
+                </button>
+                <button *ngIf="!load_btn" type="button" class="btn btn-sm btn-primary" (click)="registro()">Crear
+                    Oferta</button>
+            </div>
+
+            <div class="col themed-grid-col">
+                <button class="btn btn-secondary" type="button" (click)="resetForm()">Reset</button>
+            </div>
+            <div class="col themed-grid-col">
+                <button type="button" class="btn btn-warning" [routerLink]="['/panel/ofertas']"
+                    routerLinkActive="router-link-active">Regresar</button>
+            </div>
+        </div>
+    </div>
+</form>

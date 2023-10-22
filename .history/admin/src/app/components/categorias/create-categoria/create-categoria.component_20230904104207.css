@@ -1,0 +1,166 @@
+.form-check-input {
+    clear: left;
+}
+
+.form-switch.form-switch-lg {
+    margin-bottom: 1.5rem;
+    /* JUST FOR STYLING PURPOSE */
+}
+
+.form-switch.form-switch-lg .form-check-input {
+    height: 2rem;
+    width: calc(3rem + 0.75rem);
+    border-radius: 4rem;
+
+}
+
+.rounded-box {
+    position: relative;
+    height: 165px;
+    width: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -o-border-radius: .25rem;
+    -ms-border-radius: .25rem;
+    -moz-border-radius: .25rem;
+    padding: 10px;
+    outline: 0.5px solid #ccc;
+    -webkit-border-radius: .25rem;
+    -moz-border-radius: .25rem;
+    -ms-border-radius: .25rem;
+    border-radius: .25rem;
+}
+
+.svg-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.svg-preview svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+.error-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.avatar-upload {
+    position: relative;
+    max-width: 205px;
+    margin: 10px auto 30px;
+}
+
+.avatar-upload .avatar-edit {
+    position: absolute;
+    right: 19px;
+    z-index: 1;
+    top: 13px;
+}
+
+.avatar-upload .avatar-edit input {
+    display: none;
+}
+
+.avatar-upload .avatar-edit .custom-label {
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 0;
+    border-radius: 100%;
+    background: #3efc78;
+    border: 1px solid transparent;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    font-weight: normal;
+    transition: all 0.2s ease-in-out;
+}
+
+.avatar-upload .avatar-edit .upload-image {
+    background: #3efc78;
+}
+
+.avatar-upload .avatar-edit .remove-image {
+    background: #E91E63;
+}
+
+.avatar-upload .avatar-edit .custom-label:hover {
+    opacity: 1;
+}
+
+.avatar-upload .avatar-edit .custom-label:after {
+    position: absolute;
+    text-align: center;
+    margin: auto;
+    top: 8px;
+    right: 0;
+    left: 2px;
+    width: 18px;
+}
+
+.avatar-upload .avatar-edit .upload-image:after {
+    content: url('/assets/svgs/pen.svg');
+}
+
+.avatar-upload .avatar-edit .remove-image:after {
+    content: url('/assets/svgs/x-circle.svg');
+    left: 0px !important;
+}
+
+.avatar-upload .avatar-preview {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    border-radius: 100%;
+    overflow: hidden;
+    border: 12px solid #fff;
+    -webkit-box-shadow: 0 0 45px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 0 45px rgba(0, 0, 0, .2);
+    box-shadow: 0 0 45px rgba(0, 0, 0, .2);
+}
+
+.avatar-upload .avatar-preview>div {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+
+/* Media query for small screens (e.g., smartphones) */
+@media (max-width: 767px) {
+    .rounded-box {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .svg-preview {
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 300px;
+    }
+
+}
+
+/* Media query for tablets (e.g., iPads) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Styles for tablets */
+}
+
+/* Media query for desktop screens */
+@media (min-width: 1024px) {
+    /* Styles for desktop screens */
+}
