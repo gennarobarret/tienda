@@ -1,0 +1,71 @@
+<main class="form-signin w-100 m-auto">
+    <form>
+        <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <div class="form-floating">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Correo electrónico</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">Password</label>
+        </div>
+
+        <div class="form-check text-start my-3">
+            <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+                Remember me
+            </label>
+        </div>
+        <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+        <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2023</p>
+    </form>
+</main>
+
+
+<div class="container-fluit align-items-center justify-content-center component-login">
+    <div class="d-flex flex-column justify-content-between">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-10">
+                <div class="card card-default mb-0">
+                    <div class="card-header pb-0">
+                        <div class="app-brand w-100 d-flex justify-content-center border-bottom-0">
+                            <a class="w-auto mb-4 pl-0" href="">
+                                <img src="assets/img/components/logo/logo-dark.svg" alt="Createx" width="130">
+                                <!-- <span class="brand-name text-dark">POXITECNICA ADMIN</span> -->
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body mt-4 px-5 pb-5 pt-0">
+                        <h4 class="text-dark mt-2 text-center">Iniciar sección</h4>
+                        <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+                            <div class="form-group">
+                                <label for="signin-email">Correo electrónico</label>
+                                <input type="email" class="form-control" name="email" [(ngModel)]="user.email"
+                                    placeholder="Correo electrónico" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="signin-password" class="form-label">Contraseña</label>
+                                <div class="cs-password-toggle input-group-overlay">
+                                    <input type="{{ passwordFieldType }}" class="form-control appended-form-control"
+                                        name="password" [(ngModel)]="user.password" placeholder="Tu contraseña"
+                                        required="">
+                                    <div class="input-group-append-overlay">
+                                        <label class="btn cs-password-toggle-btn input-group-text">
+                                            <input type="checkbox" class="custom-control-input"
+                                                (change)="togglePasswordVisibility()">
+                                            <i class="cxi-eye cs-password-toggle-indicator"></i>
+                                            <span class="sr-only">Show password</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

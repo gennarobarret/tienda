@@ -7,6 +7,7 @@ import { AdminService } from "src/app/services/admin.service";
 import { CategoriaService } from "src/app/services/categoria.service";
 import { OfertaService } from 'src/app/services/oferta.service';
 
+
 declare let iziToast: any;
 
 @Component({
@@ -74,6 +75,9 @@ export class CreateCategoriaComponent implements OnInit {
                 this._ofertaService.listar_ofertas_admin(this.filtro, this.token).subscribe(
                     (ofertasResponse: any) => {
                         this.ofertasDisponibles = ofertasResponse.data;
+                        this.ofertasDisponibles = this.ofertasDisponibles.filter(oferta => {
+                            return oferta.nivel_oferta === "categoria";
+                        });
 
                         // Create an array of applied offer IDs
                         const appliedOfferIds = this.ofertasAplicadas
@@ -88,12 +92,12 @@ export class CreateCategoriaComponent implements OnInit {
                         this.load_data = false;
                     },
                     (error) => {
-                        console.log(error);
+                        console.error(error);
                     }
                 );
             },
             error => {
-                console.log(error);
+                console.error(error);
             }
         );
 
@@ -135,7 +139,6 @@ export class CreateCategoriaComponent implements OnInit {
         }
 
         const formValue = this.categoriaForm.value;
-        // console.log(formValue);
         if (!Array.isArray(formValue.ofertas_categoria)) {
             formValue.ofertas_categoria = []; // Convierte a un array vacío si no es un array
         }

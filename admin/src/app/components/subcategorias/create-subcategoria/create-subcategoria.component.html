@@ -1,21 +1,25 @@
 <app-sidebar></app-sidebar>
-<div class="container-fluid py-6">
-    <h1>Subcategorias</h1>
-    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
-        <p class="text-muted">Este módulo registra categorias de la tienda, ademas de
-            agregar oferta por categoria con una fecha tope para ser aplicada.</p>
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Subcategorias</h2>
     </div>
-</div>
+    <!-- create-categoria.component.html -->
+    <form [formGroup]="subcategoriaForm" (ngSubmit)="registro()">
+        <div class="card box-shadow-sm">
+            <div class="card-header">
+                <h5>Registro de subcategoría</h5>
+                <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+                    <p class="text-muted">
+                        Este formulario captura detalles sobre una subcategoría,
+                        como su nombre, estado, la categoria a la que pertenece y las ofertas disponibles
+                        para esa subcategoría.
+                    </p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row mb-3">
 
-<!-- create-categoria.component.html -->
-<form [formGroup]="subcategoriaForm" (ngSubmit)="registro()">
-    <div class="card box-shadow-sm">
-        <div class="card-header">
-            <h5>Registro de subcategoría</h5>
-        </div>
-        <div class="card-body">
-            <div class="form-row mb-3">
-                <div class="col-md-6 themed-grid-col">
                     <div class="row">
                         <div class="col-md-6 themed-grid-col">
                             <!-- Title Subcategoria -->
@@ -56,54 +60,57 @@
 
                         <div class="col-md-6 themed-grid-col">
                             <div class="form-group">
-                                <label for="categoriaSelect">Selecciona una Categoria:</label>
-                                <select id="categoriaSelect" name="categorias"
-                                    (change)="onCategoriaSeleccionada($event)" class="form-select form-control"
-                                    aria-label="categorias disponibles">
+                                <label for="categoria_subcategoria" class="form-label">Selecciona una Categoria:</label>
+                                <select id="categoria_subcategoria" name="categoria_subcategoria"
+                                    formControlName="categoria_subcategoria" (change)="onCategoriaSeleccionada($event)"
+                                    class="form-select form-control" aria-label="categorias disponibles"
+                                    [class.is-invalid]="categoria_subcategoria.invalid && (categoria_subcategoria.dirty || categoria_subcategoria.touched)">
                                     <option selected>Categorias</option>
-                                    <option *ngFor="let categoria_subcategoria of categorias_subcategoria"
-                                        [value]="categoria_subcategoria.id">{{
-                                        categoria_subcategoria.nombre_categoria }}</option>
+                                    <option *ngFor="let categoria of categorias" [value]="categoria._id">{{
+                                        categoria.nombre_categoria }}</option>
                                 </select>
+                                <div *ngIf="categoria_subcategoria.invalid && (categoria_subcategoria.dirty || categoria_subcategoria.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="categoria_subcategoria.errors?.['required']">Este campo es obligatorio.
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="col-md-6 themed-grid-col">
                             <div class="form-group">
-                                <label for="ofertaSelect">Selecciona una Oferta:</label>
-                                <select id="ofertaSelect" name="ofertas_subcategoria"
-                                    (change)="onOfertaSeleccionada($event)" class="form-select form-control"
-                                    aria-label="ofertas_subcategoria disponibles">
-                                    <option selected>Ofertas</option>
-                                    <option *ngFor="let oferta of ofertas_subcategoria" [value]="oferta.id">{{
-                                        oferta.nombre_oferta }}</option>
-                                </select>
+                                <label for="ofertas_subcategoria" class="form-label">
+                                    Ofertas Disponibles Para subcategoría:
+                                </label>
+                                <ng-multiselect-dropdown id="ofertas_subcategoria" name="ofertas_subcategoria"
+                                    formControlName="ofertas_subcategoria" [placeholder]="'Selecciona Ofertas'"
+                                    [data]="ofertas" [settings]="dropdownSettings" readOnly>
+                                </ng-multiselect-dropdown>
                             </div>
                         </div>
                     </div>
+
                 </div>
-
             </div>
-
-        </div>
-    </div>
-    <div class="card-footer">
-        <div class="row row-cols-1 row-cols-sm-3 g-3">
-            <div class="col themed-grid-col">
-                <button *ngIf="load_btn" type="button" class="btn btn-secondary" disabled>
-                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                    Creando...
-                </button>
-                <button *ngIf="!load_btn" type="button" class="btn btn-sm btn-primary" (click)="registro()">Crear
-                    subcategoría</button>
-            </div>
-            <div class="col themed-grid-col">
-                <button class="btn btn-secondary" type="button" (click)="resetForm()">Reset</button>
-            </div>
-            <div class="col themed-grid-col">
-                <button type="button" class="btn btn-warning" [routerLink]="['/panel/subcategorias']"
-                    routerLinkActive="router-link-active">Regresar</button>
+            <div class="card-footer">
+                <div class="d-grid gap-2 d-md-block">
+                    <button *ngIf="load_btn" type="button" class="btn btn-sm btn-outline-primary me-2" disabled>
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                        Creando...
+                    </button>
+                    <button *ngIf="!load_btn" type="button" class="btn btn-sm btn-primary me-2" (click)="registro()">
+                        Crear subcategoría
+                    </button>
+                    <button class="btn btn-sm btn-secondary me-2" type="button" (click)="resetForm()">
+                        Limpiar
+                    </button>
+                    <button type="button" class="btn btn-sm btn-warning me-2" [routerLink]="['/panel/subcategorias']"
+                        routerLinkActive="router-link-active">
+                        Regresar
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-</form>
+
+    </form>
+</main>

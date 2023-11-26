@@ -1,0 +1,255 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid mt-6">
+    <h1>Categorias</h1>
+</div>
+<!-- <ng-container *ngIf="categoria !== undefined"> -->
+<!-- create-categoria.component.html -->
+<form [formGroup]="updateForm" (ngSubmit)="actualizar()">
+    <div class="card box-shadow-sm">
+        <div class="card-header">
+            <h5>Editar categoría</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-row mb-3">
+                <div class="col-md-6 themed-grid-col">
+                    <div class="row">
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Title Categoria -->
+                            <div class="form-group">
+                                <label for="nombre_categoria" class="form-label">Nombre Categoría:</label>
+                                <input type="text" id="nombre_categoria" name="nombre_categoria"
+                                    formControlName="nombre_categoria" placeholder="Nombre de la categoría"
+                                    class="form-control form-control-md"
+                                    [class.is-invalid]="nombre_categoria.invalid && (nombre_categoria.dirty || nombre_categoria.touched)" />
+                                <div *ngIf="nombre_categoria.invalid && (nombre_categoria.dirty || nombre_categoria.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="nombre_categoria.errors?.['required']">
+                                        El nombre de la categoria es obligatorio.
+                                    </div>
+                                    <div *ngIf="nombre_categoria.errors?.['minlength']">
+                                        El nombre de la categoria debe tener al menos 1
+                                        carácter.
+                                    </div>
+                                    <div *ngIf="nombre_categoria.errors?.['maxlength']">
+                                        El nombre de la categoria debe tener como
+                                        máximo 25 caracteres.
+                                    </div>
+                                    <div *ngIf="nombre_categoria.errors?.['pattern']">
+                                        Solo se permiten letras, números,
+                                        espacios,
+                                        "ñ" y "Ñ".
+                                    </div>
+                                    <div *ngIf="nombre_categoria.errors?.['repeatedTitleError']">
+                                        El nombre de la categoria ya existe
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Estado Categoria -->
+                            <div class="form-group">
+                                <label for="estado_categoria" class="form-label">Estado Categoría:</label>
+                                <div class="form-control-md form-check form-switch form-switch-lg ml-4 mb-5">
+                                    <input class="form-check-input" type="checkbox" id="estado_categoria"
+                                        formControlName="estado_categoria" title="Toggle Category State" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label for="ofertas_categoria" class="form-label">Ofertas Disponibles Para
+                                    Categoría:</label>
+                                <ng-multiselect-dropdown id="ofertas_categoria" name="ofertas_categoria"
+                                    formControlName="ofertas_categoria" [placeholder]="'Selecciona Ofertas'"
+                                    [data]="ofertas_categoria" [settings]="dropdownSettings"
+                                    disable="!estado_categoria.value">
+                                </ng-multiselect-dropdown>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 themed-grid-col">
+                            <!-- Fecha editado categoria field -->
+                            <div class="form-group">
+                                <label for="createdAt">Created At:</label>
+                                <input type="text" id="createdAt" class="form-control" readonly
+                                    [value]="updateForm.get('createdAt')?.value | date:'yyyy-MM-dd HH:mm:ss'">
+                            </div>
+                        </div>
+                        <!-- Fecha creado categoria field -->
+                        <div class="col-md-6 themed-grid-col">
+                            <div class="form-group">
+                                <label for="updatedAt">Updated At:</label>
+                                <input type="text" id="updatedAt" class="form-control" readonly
+                                    [value]="updateForm.get('updatedAt')?.value | date:'yyyy-MM-dd HH:mm:ss'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 themed-grid-col">
+                    <!-- Icono Categoria -->
+                    <div class="form-group">
+                        <label for="icono_categoria" class="form-label">Icono Categoría:</label>
+                        <div class="mb-3">
+                            <input type="text" id="icono_categoria" name="icono_categoria"
+                                formControlName="icono_categoria" placeholder="Icono de la categoría"
+                                class="form-control form-control-md"
+                                [class.is-invalid]="icono_categoria.invalid && (icono_categoria.dirty || icono_categoria.touched)" />
+                            <div *ngIf="icono_categoria.invalid && (icono_categoria.dirty || icono_categoria.touched)"
+                                class="invalid-feedback">
+                                <div *ngIf="icono_categoria.errors?.['required']">
+                                    EL icono de la categoria es obligatorio.
+                                </div>
+                                <div *ngIf="icono_categoria.value && icono_categoria.errors?.['invalidSVG']">
+                                    El formato del icono SVG no válido. Proporcione un icono_categoria SVG válido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visualizador Icono Categoria -->
+                    <div class="rounded-box m-auto"
+                        [ngClass]="{'invalid-feedback border border-danger': icono_categoria.invalid && (icono_categoria.dirty || icono_categoria.touched)}">
+                        <div class="svg-preview" [innerHTML]="sanitizedSvgContent"></div>
+                        <div *ngIf="icono_categoria.invalid && (icono_categoria.dirty || icono_categoria.touched)"
+                            class="error-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none"
+                                stroke="#ff4242" viewBox="0 0 12 12">
+                                <circle cx="6" cy="6" r="4.5" />
+                                <path stroke-linejoin="round" d="M5.8 3.6h.4L6 6.5z" />
+                                <circle cx="6" cy="8.2" r=".6" fill="#ff4242" stroke="none" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row mb-3">
+                <div class="col-md-6 themed-grid-col">
+                    <!-- <div class="row"> -->
+                    <!-- <div class="col-md-6 themed-grid-col"> -->
+                    <!-- Descuento Oferta Categoria -->
+                    <!-- <div class="form-group">
+                                <label for="descuento_oferta" class="form-label">Descuento por Categoría</label>
+                                <div class="form-group">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <input type="number" id="descuento_oferta" name="descuento_oferta"
+                                            formControlName="descuento_oferta" placeholder="Descuento de la categoría"
+                                            class="form-control form-control-md"
+                                            [class.is-invalid]="descuento_oferta.invalid && (descuento_oferta.dirty || descuento_oferta.touched)"
+                                            (keypress)="restrictInput($event)" (input)="limitInputLength($event)" />
+                                        <div *ngIf="descuento_oferta.invalid && (descuento_oferta.dirty || descuento_oferta.touched)"
+                                            class="invalid-feedback">
+                                            <div *ngIf="descuento_oferta.errors?.['required']">El descuento de la
+                                                oferta
+                                                es obligatorio.</div>
+                                            <div *ngIf="descuento_oferta.errors?.['invalidDiscount']">
+                                                El descuento de la oferta no puede ser cero.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col"> -->
+                    <!-- Oferta Categoria -->
+                    <!-- <div class="form-group">
+                                <label for="oferta" class="form-label">Oferta Categoría</label>
+                                <div class="form-check form-switch form-switch-lg ml-4 mb-5">
+                                    <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta"
+                                        title="Toggle Category State" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 themed-grid-col">
+                            <div class="form-group">
+                                <label for="fin_oferta" class="form-label">Fecha Fin Oferta</label>
+                                <input type="date" id="fin_oferta" name="fin_oferta" formControlName="fin_oferta"
+                                    placeholder="Vencimiento de la oferta de la categoría"
+                                    class="form-control form-control-md"
+                                    [class.is-invalid]="fin_oferta.invalid && (fin_oferta.dirty || fin_oferta.touched)" />
+                                <div *ngIf="fin_oferta.invalid && (fin_oferta.dirty || fin_oferta.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="fin_oferta.errors?.['required']">El descuento de la oferta es
+                                        obligatorio.</div>
+                                    <div *ngIf="fin_oferta.value && fin_oferta.errors?.['invalidDate']">La fecha de
+                                        finalización de la oferta es inválida.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 themed-grid-col">
+                            <div class="form-group">
+                                <label for="file-input">Portada Oferta</label>
+                                <input type="file" id="file-input" formControlName="portada" #fileInput
+                                    class="form-control form-control-md" (change)="fileChangeEvent($event)"
+                                    [class.is-invalid]="portada.invalid && (portada.dirty || portada.touched)" />
+                                <div *ngIf="portada.invalid && (portada.dirty || portada.touched)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="portada.errors?.['required']">La portada de la oferta es
+                                        obligatoria.
+                                    </div>
+                                    <div *ngIf="portada.value && portada.errors?.['invalidFileType']">El archivo
+                                        debe
+                                        ser una imagen (png, jpeg, jpg, gif, webp).</div>
+                                    <div *ngIf="portada.value && portada.errors?.['invalidFileSize']">La imagen no
+                                        puede
+                                        superar los 4MB.</div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                    <!-- </div> -->
+                </div>
+                <!-- <div class="col-md-6 themed-grid-col">
+                    <div class="imgPortada m-auto">
+         
+                        <img [src]="imageUrl" class="img-thumbnail" alt="imgPortada"
+                            [ngClass]="{'invalid-feedback border border-danger': portada.invalid && (portada.dirty || portada.touched)}" />
+               
+                        <div *ngIf="portada.invalid && (portada.dirty || portada.touched)" class="error-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none"
+                                stroke="#ff4242" viewBox="0 0 12 12">
+                                <circle cx="6" cy="6" r="4.5" />
+                                <path stroke-linejoin="round" d="M5.8 3.6h.4L6 6.5z" />
+                                <circle cx="6" cy="8.2" r=".6" fill="#ff4242" stroke="none" />
+                            </svg>
+                        </div>
+                    </div>
+                </div> -->
+
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-grid gap-2 d-md-block">
+                <button *ngIf="load_btn" type="button" class="btn btn-secondary mr-2" disabled>
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    Creando...
+                </button>
+                <button *ngIf="!load_btn" type="button" class="btn btn-sm btn-primary mr-2" (click)="actualizar()">
+                    Actualizar categoría
+                </button>
+                <button class="btn btn-secondary mr-2" type="button" (click)="resetForm()">
+                    Reset
+                </button>
+                <button type="button" class="btn btn-warning mr-2" [routerLink]="['/panel/categorias']"
+                    routerLinkActive="router-link-active">
+                    Regresar
+                </button>
+            </div>
+        </div>
+    </div>
+
+</form>
+<!-- <!-- </ng-container> -->
+
+<!-- <ng-container *ngIf="categoria === undefined"> -->
+<!-- <h3 class="text-center">No se encontró actualizar</h3>
+    <div class="row">
+        <div class="col-3 mx-auto">
+            <img src="assets/img/warning.png" alt="" />
+        </div>
+    </div> -->
+<!-- </ng-container>  -->

@@ -33,7 +33,6 @@ import { CreateProductoComponent } from "./components/productos/create-producto/
 
 const appRoute: Routes = [
     { path: '', component: InicioComponent, canActivate: [AdminGuard] },
-
     {
         path: 'panel',
         children: [

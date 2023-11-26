@@ -1,0 +1,45 @@
+<div class="container-fluit align-items-center justify-content-center component-login">
+    <div class="d-flex flex-column justify-content-between">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-10">
+                <div class="card card-default mb-0">
+                    <div class="card-header pb-0">
+                        <div class="app-brand w-100 d-flex justify-content-center border-bottom-0">
+                            <a class="w-auto mb-4 pl-0" href="">
+                                <img src="assets/img/components/logo/logo-dark.svg" alt="Createx" width="130">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body mt-4 px-5 pb-5 pt-0">
+                        <h4 class="text-dark mt-2 text-center">Iniciar sección</h4>
+                        <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+                            <div class="form-group">
+                                <label for="signin-email">Correo electrónico</label>
+                                <input type="email" class="form-control" name="email" [(ngModel)]="user.email"
+                                    placeholder="Correo electrónico" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="signin-password" class="form-label">Contraseña</label>
+                                <div class="cs-password-toggle input-group-overlay">
+                                    <input type="{{ passwordFieldType }}" class="form-control appended-form-control"
+                                        name="password" [(ngModel)]="user.password" placeholder="Tu contraseña" required
+                                        autocomplete="current-password">
+
+                                    <div class="input-group-append-overlay">
+                                        <label class="btn cs-password-toggle-btn input-group-text">
+                                            <input type="checkbox" class="custom-control-input"
+                                                (change)="togglePasswordVisibility()">
+                                            <i class="cxi-eye cs-password-toggle-indicator"></i>
+                                            <span class="sr-only">Show password</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

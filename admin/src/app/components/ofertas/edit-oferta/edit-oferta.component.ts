@@ -1,12 +1,15 @@
 import { Component, ChangeDetectorRef } from "@angular/core";
-import { AdminService } from "src/app/services/admin.service";
-import { GLOBAL } from 'src/app/services/GLOBAL';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from "@angular/forms";
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { AdminService } from "src/app/services/admin.service";
 import { OfertaService } from "src/app/services/oferta.service";
+import { CategoriaService } from "src/app/services/categoria.service";
+import { SubcategoriaService } from 'src/app/services/subcategoria.service';
+import { GLOBAL } from 'src/app/services/GLOBAL';
 
 declare let iziToast: any;
-declare let $: any;
+
 @Component({
   selector: 'app-edit-oferta',
   templateUrl: './edit-oferta.component.html',
@@ -15,21 +18,24 @@ declare let $: any;
 export class EditOfertaComponent {
 
   updateForm!: FormGroup;
-  id = '';
-  load_data = false;
+  id: string = '';
   config: { height: number };
   token = localStorage.getItem('token');
+  load_data = false;
   load_btn = false;
   imageUrl: any | ArrayBuffer = 'assets/img/default.jpg';
   selectedFile: File | null = null;
   url = GLOBAL.url;
+  filtro = '';
   private nombre: string = '';
-
-
+  ofertaEncontradaCat: boolean = false;
+  ofertaEncontradaSubcat: boolean = false;
 
   constructor(
     private _adminService: AdminService,
     private _ofertaService: OfertaService,
+    private _categoriaService: CategoriaService,
+    private _subcategoriaService: SubcategoriaService,
     private _router: Router,
     private _route: ActivatedRoute,
     private fb: FormBuilder,
@@ -45,34 +51,52 @@ export class EditOfertaComponent {
       descuento_oferta: ['', [Validators.required, this.validateDiscountRange.bind(this)]],
       inicio_oferta: ['', [Validators.required, this.validateOfertDate.bind(this)]],
       fin_oferta: ['', [Validators.required, this.validateOfertDate.bind(this)]],
-      portada_oferta: ['', [Validators.required]],
+      portada_oferta: [''],
       estado_oferta: ['', [Validators.required]],
+      nivel_oferta: ['', [Validators.required]],
       createdAt: [''],
       updatedAt: [''],
     });
-
   }
 
   ngOnInit(): void {
-    this._route.params.subscribe(params => {
-      this.id = params['id'];
-      this.initializeForm();
-    });
+    // Lógica para inicializar el formulario
+    this.getRouteParams();
+    this.initializeForm();
     this.subscribeToFormChanges();
   }
 
+  // Métodos para manejar los valores actualizados
+  convertDateFormat(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+  // Métodos para la inicialización del formulario y obtención de datos
+  getRouteParams() {
+    this._route.params.subscribe(params => {
+      this.id = params['id'];
+    });
+  }
   initializeForm() {
     this._ofertaService.obtener_oferta_admin(this.id, this.token).subscribe(
-      response => {
+      ofertasResponse => {
         this.load_data = false;
-        if (response.data === undefined) {
+        if (ofertasResponse.data === undefined) {
           this._router.navigate(['/panel/ofertas']);
         } else {
-          const { nombre_oferta, estado_oferta, descripcion_oferta, descuento_oferta, inicio_oferta, fin_oferta, portada_oferta, createdAt, updatedAt } = response.data;
+          const { _id, nombre_oferta, estado_oferta, descripcion_oferta, descuento_oferta, inicio_oferta, fin_oferta, portada_oferta, nivel_oferta, createdAt, updatedAt } = ofertasResponse.data;
+          // console.log('ID de la oferta:', _id);
           const formatteInicioOferta = this.convertDateFormat(inicio_oferta);
           const formattedFinOferta = this.convertDateFormat(fin_oferta);
           this.imageUrl = this.url + 'obtener_portada_oferta/' + portada_oferta;
           this.nombre = nombre_oferta;
+
           this.updateForm.patchValue({
             nombre_oferta: nombre_oferta,
             estado_oferta: estado_oferta,
@@ -80,6 +104,7 @@ export class EditOfertaComponent {
             descuento_oferta: descuento_oferta,
             inicio_oferta: formatteInicioOferta,
             fin_oferta: formattedFinOferta,
+            nivel_oferta: nivel_oferta,
             createdAt: createdAt,
             updatedAt: updatedAt
           });
@@ -91,48 +116,136 @@ export class EditOfertaComponent {
         this._router.navigate(['/panel/ofertas']);
       }
     );
-  }
 
-  convertDateFormat(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  }
-
-
-
-  subscribeToFormChanges(): void {
-    this.updateForm.get("estado_oferta")!.valueChanges.subscribe((ofertaValue) => {
-      if (!ofertaValue) {
-        this.showWarningMessage('Oferta deshabilitada')
+    this._subcategoriaService.listar_subcategorias_admin(this.filtro, this.token).subscribe(
+      subcategoriasResponse => {
+        const ofertas_subcategorias = subcategoriasResponse.data;
+        this.ofertaEncontradaSubcat = this.checkOfferInSubcategories(ofertas_subcategorias);
+        // Aquí puedes llamar una función o realizar operaciones con el valor actualizado
+        this.doSomethingWithSubcatValue(this.ofertaEncontradaSubcat);
+      },
+      error => {
+        console.log(error);
+        this._router.navigate(['/panel/ofertas']);
       }
+    );
+
+    this._categoriaService.listar_categorias_admin(this.filtro, this.token).subscribe(
+      (categoriasResponse: any) => {
+        const ofertas_categorias = categoriasResponse.data;
+        this.ofertaEncontradaCat = this.checkOfferInCategories(ofertas_categorias);
+        // Aquí puedes llamar una función o realizar operaciones con el valor actualizado
+        this.doSomethingWithCatValue(this.ofertaEncontradaCat);
+
+      },
+      error => {
+        console.log(error);
+        this._router.navigate(['/panel/ofertas']);
+      }
+    );
+  }
+
+  // Métodos para comprobar ofertas en subcategorías y categorías
+  checkOfferInSubcategories(ofertas_subcategorias: any[]): boolean {
+    let encontrada = false;
+
+    if (Array.isArray(ofertas_subcategorias)) {
+      ofertas_subcategorias.forEach((subcategoria: any) => {
+        if (subcategoria && subcategoria.ofertas_categoria && Array.isArray(subcategoria.ofertas_categoria)) {
+          subcategoria.ofertas_categoria.forEach((oferta: any) => {
+            const idOferta = oferta && oferta._id;
+            if (idOferta === this.id) {
+              encontrada = true;
+            }
+          });
+        }
+      });
+    } else {
+      console.error('ofertas_subcategorias is not an array or is undefined.');
+    }
+
+    return encontrada;
+  }
+
+
+
+  checkOfferInCategories(ofertas_categorias: any[]): boolean {
+    let encontrada = false;
+
+    ofertas_categorias.forEach((categoria: any) => {
+      categoria.ofertas_categoria.forEach((oferta: any) => {
+        const idOferta = oferta._id;
+        if (idOferta === this.id) {
+          encontrada = true;
+        }
+      });
     });
 
+    return encontrada;
+  }
+
+  // Métodos para manejar los valores actualizados
+  doSomethingWithSubcatValue(value: boolean) {
+    const nivel_ofertaControl = this.updateForm.get('nivel_oferta');
     const estado_ofertaControl = this.updateForm.get('estado_oferta');
-    const nombre_ofertaOfertaControl = this.updateForm.get('nombre_oferta');
+    if (value === true) { nivel_ofertaControl?.disable(); }
+    if (estado_ofertaControl && nivel_ofertaControl) {
+      estado_ofertaControl.valueChanges.subscribe((ofertaValue) => {
+        [nivel_ofertaControl].forEach(control => {
+          if (value === false) {
+            if (ofertaValue === false) {
+              control.disable({ onlySelf: true });
+            } else {
+              control.enable({ onlySelf: true });
+            }
+          } else {
+            nivel_ofertaControl?.disable();
+          }
+        });
+      });
+    }
+  }
+  doSomethingWithCatValue(value: boolean) {
+    const nivel_ofertaControl = this.updateForm.get('nivel_oferta');
+    const estado_ofertaControl = this.updateForm.get('estado_oferta');
+    if (value === true) { nivel_ofertaControl?.disable(); }
+    if (estado_ofertaControl && nivel_ofertaControl) {
+      estado_ofertaControl.valueChanges.subscribe((ofertaValue) => {
+        [nivel_ofertaControl].forEach(control => {
+          if (value === false) {
+            if (ofertaValue === false) {
+              control.disable({ onlySelf: true });
+            } else {
+              control.enable({ onlySelf: true });
+            }
+          } else {
+            nivel_ofertaControl?.disable();
+          }
+        });
+      });
+    }
+  }
+
+  subscribeToFormChanges(): void {
+
+    const estado_ofertaControl = this.updateForm.get('estado_oferta');
+    const nombre_ofertaControl = this.updateForm.get('nombre_oferta');
     const descripcion_ofertaControl = this.updateForm.get('descripcion_oferta');
     const descuento_ofertaControl = this.updateForm.get('descuento_oferta');
     const inicio_ofertaControl = this.updateForm.get('inicio_oferta');
-    const fin_ofertaOfertaControl = this.updateForm.get('fin_oferta');
+    const fin_ofertaControl = this.updateForm.get('fin_oferta');
     const portada_ofertaControl = this.updateForm.get('portada_oferta');
 
-    if (estado_ofertaControl && nombre_ofertaOfertaControl && descuento_ofertaControl && descripcion_ofertaControl && inicio_ofertaControl && fin_ofertaOfertaControl && portada_ofertaControl) {
+    if (estado_ofertaControl && nombre_ofertaControl && descripcion_ofertaControl && descuento_ofertaControl && inicio_ofertaControl && fin_ofertaControl && portada_ofertaControl) {
       estado_ofertaControl.valueChanges.subscribe((ofertaValue) => {
-        if (ofertaValue === false) {
-          // this.imageUrl = 'assets/img/default.jpg';
-          // this.selectedFile = null;
-          [nombre_ofertaOfertaControl, descripcion_ofertaControl, descuento_ofertaControl, inicio_ofertaControl, fin_ofertaOfertaControl, portada_ofertaControl].forEach(control => {
+
+        [nombre_ofertaControl, descripcion_ofertaControl, descuento_ofertaControl, inicio_ofertaControl, fin_ofertaControl, portada_ofertaControl].forEach(control => {
+          if (ofertaValue === false) {
             control.disable({ onlySelf: true });
-          });
-        } else {
-          [nombre_ofertaOfertaControl, descripcion_ofertaControl, descuento_ofertaControl, inicio_ofertaControl, fin_ofertaOfertaControl, portada_ofertaControl].forEach(control => {
+          } else {
             control.enable({ onlySelf: true });
-          });
-        }
+          }
+        });
       });
     }
   }
@@ -164,6 +277,11 @@ export class EditOfertaComponent {
   get estado_oferta() {
     return this.updateForm.get("estado_oferta")!;
   }
+
+  get nivel_oferta() {
+    return this.updateForm.get("nivel_oferta")!;
+  }
+
 
   limitInputLength(event: any) {
     const inputValue = event.target.value;
@@ -283,11 +401,22 @@ export class EditOfertaComponent {
   }
 
   private validateAndUpdatePortada(file: File) {
-    const errors = this.validateFileUpdate(file);
-    if (errors) {
-      this.updateForm.get('portada_oferta')!.setErrors(errors);
+    if (!this.imageUrl && !file) {
+      // Si no hay imagen precargada y no se selecciona un archivo nuevo, establecer error
+      this.updateForm.get('portada_oferta')!.setErrors({ required: true });
+      return;
+    }
+
+    if (file) {
+      // Validar el archivo seleccionado
+      const errors = this.validateFileUpdate(file);
+      if (errors) {
+        this.updateForm.get('portada_oferta')!.setErrors(errors);
+      }
     }
   }
+
+
 
   private validateFileUpdate(file: File): { [key: string]: any } | null {
     if (file) {
@@ -341,6 +470,7 @@ export class EditOfertaComponent {
     // console.info('fin:', formValue.fin_oferta);
     // console.info('portada_oferta:', formValue.portada_oferta);
     // console.info('estado:', formValue.estado_oferta);
+    // console.info('nivel:', formValue.nivel_oferta);
     // console.info('file:', this.selectedFile);
 
     const data: any = {};
@@ -357,6 +487,7 @@ export class EditOfertaComponent {
       data.estado_oferta = formValue.estado_oferta;
       data.inicio_oferta = formValue.inicio_oferta;
       data.fin_oferta = formValue.fin_oferta;
+      data.nivel_oferta = formValue.nivel_oferta;
     }
 
 
@@ -415,7 +546,7 @@ export class EditOfertaComponent {
         if (response.data === undefined) {
           this._router.navigate(['/panel/ofertas']);
         } else {
-          const { nombre_oferta, estado_oferta, descripcion_oferta, descuento_oferta, inicio_oferta, fin_oferta, portada_oferta, createdAt, updatedAt } = response.data;
+          const { nombre_oferta, estado_oferta, descripcion_oferta, descuento_oferta, inicio_oferta, fin_oferta, portada_oferta, nivel_oferta, createdAt, updatedAt } = response.data;
           const formatteInicioOferta = this.convertDateFormat(inicio_oferta);
           const formattedFinOferta = this.convertDateFormat(fin_oferta);
           this.imageUrl = this.url + 'obtener_portada_oferta/' + portada_oferta;
@@ -426,6 +557,7 @@ export class EditOfertaComponent {
             descuento_oferta: descuento_oferta,
             inicio_oferta: formatteInicioOferta,
             fin_oferta: formattedFinOferta,
+            nivel_oferta: nivel_oferta,
             createdAt: createdAt,
             updatedAt: updatedAt
           });

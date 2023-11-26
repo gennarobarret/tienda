@@ -1,4 +1,33 @@
-<div class="container-fluit align-items-center justify-content-center component-login">
+<main class=" text-center form-signin w-100 m-auto">
+    <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+        <img class="mb-4" src="/assets/vendor/bootstrap/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <div class="form-floating">
+            <input type="email" class="form-control" id="floatingInput" name="email" [(ngModel)]="user.email"
+                placeholder="name@example.com" required autocomplete="username">
+            <!-- <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"> -->
+            <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating">
+            <input type="{{ passwordFieldType }}" class="form-control appended-form-control" id="floatingPassword"
+                name="password" [(ngModel)]="user.password" placeholder="Password" required
+                autocomplete="current-password">
+            <!-- <input type="password" class="form-control" id="floatingPassword" placeholder="Password"> -->
+            <label for="floatingPassword">Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <p class="mt-5 mb-3 text-muted">© 2017–2022</p>
+    </form>
+</main>
+
+
+<!-- <div class="container-fluit align-items-center justify-content-center component-login">
     <div class="d-flex flex-column justify-content-between">
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-10">
@@ -7,7 +36,6 @@
                         <div class="app-brand w-100 d-flex justify-content-center border-bottom-0">
                             <a class="w-auto mb-4 pl-0" href="">
                                 <img src="assets/img/components/logo/logo-dark.svg" alt="Createx" width="130">
-                                <!-- <span class="brand-name text-dark">POXITECNICA ADMIN</span> -->
                             </a>
                         </div>
                     </div>
@@ -17,14 +45,15 @@
                             <div class="form-group">
                                 <label for="signin-email">Correo electrónico</label>
                                 <input type="email" class="form-control" name="email" [(ngModel)]="user.email"
-                                    placeholder="Correo electrónico" required="">
+                                    placeholder="Correo electrónico" required autocomplete="username">
                             </div>
                             <div class="form-group">
                                 <label for="signin-password" class="form-label">Contraseña</label>
                                 <div class="cs-password-toggle input-group-overlay">
                                     <input type="{{ passwordFieldType }}" class="form-control appended-form-control"
-                                        name="password" [(ngModel)]="user.password" placeholder="Tu contraseña"
-                                        required="">
+                                        name="password" [(ngModel)]="user.password" placeholder="Tu contraseña" required
+                                        autocomplete="current-password">
+
                                     <div class="input-group-append-overlay">
                                         <label class="btn cs-password-toggle-btn input-group-text">
                                             <input type="checkbox" class="custom-control-input"
@@ -42,4 +71,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

@@ -1,0 +1,231 @@
+<app-sidebar></app-sidebar>
+<!-- Page title -->
+<div class="border-bottom pt-5 mt-2 mb-5">
+    <h1 class="mt-2 mt-md-4 mb-3 pt-5">Oferta</h1>
+    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+        <p class="text-muted">Este módulo lista todos los ofertas de la tienda.</p>
+    </div>
+</div>
+<div class="card box-shadow-sm">
+    <div class="card-header">
+        <div class="row">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6 d-grid gap-2 d-md-flex align-items-center justify-content-md-end">
+                        <div class="input-group">
+                            <input class="form-control" type="text" placeholder="nombre de la oferta" name="filtro"
+                                [(ngModel)]="filtro">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" (click)="filtrar()">Filtrar</button>
+                                <button class="btn btn-info" type="button" (click)="resetar()">Resetear</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-grid gap-2 d-md-flex align-items-center justify-content-md-end ">
+                        <div class="font-size-sm font-weight-medium pl-md-4">
+                            <a class="btn btn-outline-primary" [routerLink]="['/panel/ofertas/registro']">
+                                Registrar oferta
+                                <i aria-label="button registrar" tabindex="-1" role="button" aria-disabled="true"
+                                    class="cxi-angle-right font-size-base align-middle ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="centered-content" style="cursor: pointer;" (click)="sort('nombre_oferta')">
+                            Nombre↑↓
+                        </th>
+                        <th class="centered-content" style="cursor: pointer;" (click)="sort('estado_oferta')">
+                            Estado↑↓
+                        </th>
+                        <th class="centered-content">
+                            Portada
+                        </th>
+                        <th class="centered-content" style="cursor: pointer;" (click)="sort('descuento_oferta')">
+                            OFF%↑↓
+                        </th>
+                        <th class="centered-content" style="cursor: pointer;" (click)="sort('nivel_oferta')">
+                            Nivel↑↓
+                        </th>
+                        <th class="centered-content" style="cursor: pointer;" (click)="sort('inicio_oferta')">
+                            OfertaStart↑↓
+                        </th>
+                        <th class="centered-content" style="cursor: pointer;" (click)="sort('fin_oferta')">
+                            OfertaEnd↑↓
+                        </th>
+                        <th class="centered-content" style="cursor: pointer;">
+                            Tiempo restante
+                        </th>
+                        <th class="centered-content" style="cursor: pointer;" (click)="sort('createdAt')">
+                            Creado↑↓
+                        </th>
+                        <th class="centered-content" style="cursor: pointer;" (click)="sort('updatedAt')">
+                            Editado↑↓
+                        </th>
+                        <th class="centered-content">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody *ngIf="load_data">
+                    <tr>
+                        <td class="text-center" colspan="7">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <ng-container *ngIf="!load_data">
+                    <tbody *ngFor="let item of ofertas| slice: (page-1)*pageSize : (page-1) * pageSize + pageSize">
+                        <tr>
+                            <!-- item.nombre_oferta -->
+                            <td class="centered-content" [routerLink]="['/panel/ofertas', item._id]"
+                                style="cursor: pointer;">{{item.nombre_oferta}}
+                            </td>
+                            <!-- item.estado_oferta -->
+                            <td class="centered-content">
+                                <span class="badge"
+                                    [ngClass]="{'text-bg-success': item.estado_oferta === 'activo', 'text-bg-danger': item.estado_oferta === 'inactivo'}">{{
+                                    item.estado_oferta === 'activo' ? 'Activo' : 'Inactivo' }}</span>
+                            </td>
+                            <!-- item.portada_oferta -->
+                            <td class="centered-content">
+                                <!-- Button trigger modal -->
+                                <img style="cursor: pointer;"
+                                    [src]="url + 'obtener_portada_oferta/' + item.portada_oferta"
+                                    class="imgMiniatura rounded-0" alt="Square image" data-bs-toggle="modal"
+                                    data-bs-target="#imageModal" (click)="openImageModal(item.portada_oferta)">
+                                <!-- Modal -->
+                                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="imageModalLabel">Portada de La oferta
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <img [src]="url + 'obtener_portada_oferta/' + selectedImage"
+                                                    class="img-fluid" alt="Square image">
+                                            </div>
+                                            <div class="modal-footer">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- item.descuento_oferta -->
+                            <td class="centered-content">{{item.descuento_oferta}}%</td>
+
+                            <!-- item.nivel_oferta -->
+                            <td class="centered-content">{{item.nivel_oferta.nombre}}</td>
+
+                            <!-- item.inicio_oferta -->
+                            <td class="centered-content">{{ item.inicio_oferta | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+
+                            <!-- item.fin_oferta -->
+                            <td class="centered-content">{{ item.fin_oferta | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+
+                            <!-- Tiempo restante -->
+                            <td class="centered-content" [ngClass]="item.texto_color">{{ item.tiempo_restante }}</td>
+
+                            <!--  item.createdAt -->
+                            <td class="centered-content">{{ item.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+
+                            <!--  item.updatedAt -->
+                            <td class="centered-content">{{ item.updatedAt | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+
+
+
+                            <td class="centered-content">
+                                <div class="btn-group d-flex">
+                                    <a class="btn-warning d-flex align-items-center btn-icon-custom p-1 mr-2"
+                                        [routerLink]="['/panel/ofertas', item._id]">
+                                        <img src="../assets/svgs/btn-icon-edit.svg" alt="edit icon" title="edit"
+                                            class="me-2" />
+                                    </a>
+                                    <a class="btn-danger d-flex align-items-center btn-icon-custom p-1"
+                                        style="cursor: pointer;" data-bs-toggle="modal"
+                                        [attr.data-bs-target]="'#delete-' + item._id">
+                                        <img src="../assets/svgs/btn-icon-trash.svg" alt="delete icon" title="delete"
+                                            class="me-2" />
+                                    </a>
+                                </div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="delete-{{item._id}}" tabindex="-1"
+                                    aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered  modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmación de
+                                                    eliminación</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Deseas eliminar {{item.nombre_oferta}}?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Cancelar</button>
+                                                <button *ngIf="!load_btn" class="btn btn-danger btn-shadow btn-sm"
+                                                    (click)="eliminar(item._id)" type="button">Si,
+                                                    eliminar</button>
+                                                <button *ngIf="load_btn" type="button" class="btn btn-primary" disabled>
+                                                    <span class="spinner-grow spinner-grow-sm mr-2" role="status"
+                                                        aria-hidden="true"></span>
+                                                    Eliminando...
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </ng-container>
+
+            </table>
+            <!-- No Records Found -->
+            <ng-container *ngIf="!load_data && ofertas.length === 0">
+                <h3 class="text-center">No se encontró registro</h3>
+                <div class="row">
+                    <div class="col-3 mx-auto">
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none" stroke="#ff4242"
+                            viewBox="0 0 12 12">
+                            <circle cx="6" cy="6" r="4.5" />
+                            <path stroke-linejoin="round" d="M5.8 3.6h.4L6 6.5z" />
+                            <circle cx="6" cy="8.2" r=".6" fill="#ff4242" stroke="none" />
+                        </svg> -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#ff4242"
+                            class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                            <path
+                                d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z" />
+                            <path
+                                d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z" />
+                        </svg>
+                    </div>
+                </div>
+            </ng-container>
+
+        </div>
+    </div>
+    <div class="card-footer">
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="ofertas.length"></ngb-pagination>
+    </div>
+</div>

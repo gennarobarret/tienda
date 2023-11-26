@@ -1,63 +1,131 @@
-<!-- Navbar-->
-<header class="navbar navbar-expand navbar-light fixed-top navbar-box-shadow
-    bg-light px-3 px-lg-4" data-scroll-header data-fixed-element>
-    <a class="navbar-brand d-lg-none" href="dev-setup.html">
-        <img src="assets/img/components/logo/logo-dark.svg" alt="Createx" width="130">
-    </a>
-    <button class="navbar-toggler d-block d-lg-none mr-3 ml-auto" type="button" data-toggle="offcanvas"
-        data-target="componentsNav">
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Company name</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <ul class="navbar-nav ml-auto d-none d-lg-flex align-items-center">
-        <li class="nav-item">
-            <a class="nav-link py-0" href="../components/typography.html">
-                <i class="cxi-profile align-middle mt-n1 mr-2"></i>
-                Cuenta
-            </a>
-        </li>
-    </ul>
+    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"
+        aria-label="Search">
+    <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" (click)="logout()">Sign out</a>
+        </div>
+    </div>
 </header>
 
-<!-- Side navigation (Off-canvas)-->
-<aside class="cs-offcanvas cs-offcanvas-expand bg-dark" id="componentsNav">
-    <div class="cs-offcanvas-cap d-none d-lg-block py-4">
-        <a class="navbar-brand py-2" href="dev-setup.html">
-            <img src="assets/img/components/logo/logo-white.svg" alt="Createx" width="130">
-        </a>
-        <span class="badge badge-warning">Docs</span>
-    </div>
-    <div class="cs-offcanvas-cap d-flex d-lg-none">
-        <div class="d-flex align-items-center mt-1">
-            <h5 class="text-light mb-0 mr-3">Menu</h5>
-            <span class="badge badge-warning">Docs</span>
-        </div>
-        <button class="close text-light" type="button" data-dismiss="offcanvas" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="d-flex d-lg-none align-items-center py-4 px-3 border-bottom
-        border-light">
-        <a class="btn btn-primary btn-block mr-3 px-4" href="index.html"><i class="cxi-eye mt-n1 mr-2"></i>Preview</a>
-        <a class="btn btn-success btn-block mt-0 px-4" href="../components/typography.html"><i class="cxi-layouts mt-n1
-                mr-2"></i>Components</a>
-    </div>
-    <div class="cs-offcanvas-body px-0 pt-4 pb-grid-gutter" data-simplebar data-simplebar-inverse>
-        <h6 class="font-size-lg text-light px-4 mt-2 mb-3">Contents</h6>
-        <hr class="hr-gradient hr-light mb-2 opacity-25">
-        <nav class="nav nav-light">
-            <a class="nav-link px-4" [routerLink]="['/inicio']" routerLinkActive="active">Inicio</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/categorias']" routerLinkActive="active">Categorias</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/subcategorias']" routerLinkActive="active">Subcategorias</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/clientes']" routerLinkActive="active">Cliente</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/proveedores']" routerLinkActive="active">Proveedores</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/productos/registro']"
-                routerLinkActive="active">Productos</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/cupones']" routerLinkActive="active">Cupones</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/ofertas']" routerLinkActive="active">Ofertas</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/contactos']" routerLinkActive="active">Mensajes</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/ventas']" routerLinkActive="active">Ventas</a>
-            <a class="nav-link px-4" [routerLink]="['/panel/configuraciones']"
-                routerLinkActive="active">Configuraciones</a>
+<div class="container-fluid">
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3 sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" [routerLink]="['']">
+                            <span data-feather="home" class="align-text-bottom"></span>
+                            Dashboard
+                        </a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/panel/categorias']" routerLinkActive="active">
+                            <span data-feather="layers" class="align-text-bottom"></span>
+                            Categories
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/panel/subcategorias']" routerLinkActive="active">
+                            <span data-feather="layers" class="align-text-bottom"></span>
+                            Subcategories
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/panel/clientes']" routerLinkActive="active">
+                            <span data-feather="users" class="align-text-bottom"></span>
+                            Customers
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/panel/proveedores']" routerLinkActive="active">
+                            <span data-feather="truck" class="align-text-bottom"></span>
+                            Providers
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/panel/cupones']" routerLinkActive="active">
+                            <span data-feather="gift" class="align-text-bottom"></span>
+                            Coupons
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/panel/ofertas']" routerLinkActive="active">
+                            <span data-feather="gift" class="align-text-bottom"></span>
+                            Offers
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/panel/productos/registro']" routerLinkActive="active">
+                            <span data-feather="shopping-cart" class="align-text-bottom"></span>
+                            Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file" class="align-text-bottom"></span>
+                            Orders
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="bar-chart-2" class="align-text-bottom"></span>
+                            Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="layers" class="align-text-bottom"></span>
+                            Integrations
+                        </a>
+                    </li>
+                </ul>
+
+                <h6
+                    class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                    <span>Saved reports</span>
+                    <a class="link-secondary" href="#" aria-label="Add a new report">
+                        <span data-feather="plus-circle" class="align-text-bottom"></span>
+                    </a>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text" class="align-text-bottom"></span>
+                            Current month
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text" class="align-text-bottom"></span>
+                            Last quarter
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text" class="align-text-bottom"></span>
+                            Social engagement
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text" class="align-text-bottom"></span>
+                            Year-end sale
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </div>
-</aside>
+</div>

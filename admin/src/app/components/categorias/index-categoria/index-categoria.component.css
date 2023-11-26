@@ -1,4 +1,4 @@
-.centered-content {
+/* .centered-content {
     text-align: center;
     vertical-align: middle;
 }
@@ -19,7 +19,7 @@
     height: 3rem;
 }
 
-/* Apply basic styles to the button */
+
 .btn-icon {
     background-color: transparent;
     border: none;
@@ -27,27 +27,23 @@
     padding: 0;
 }
 
-/* Apply styles specific to the erase button */
+
 .btn-icon-custom {
     width: 35px;
-    /* Adjust the width as needed */
     height: 35px;
-    /* Adjust the height as needed */
     border-radius: 10%;
-    /* Round the corners to 10% to make it a square */
     transition: transform 0.2s, opacity 0.2s;
 }
 
-/* Add a hover effect */
+
 .btn-icon-custom:hover {
     transform: scale(1.1);
-    /* Increase the size on hover */
 }
 
-/* Add a click effect */
+
 .btn-icon-custom:active {
     transform: scale(0.9);
-    /* Decrease the size when clicked */
     opacity: 0.7;
-    /* Reduce opacity when clicked */
 }
+
+*/
